@@ -1,18 +1,18 @@
 #include "SDLRenderer.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
+#include <iostream>
 
-SDLRenderer::SDLRenderer()
-{
+SDLRenderer::SDLRenderer() {
 
 }
 
-SDLRenderer::~SDLRenderer()
-{
+SDLRenderer::~SDLRenderer() {
 
 }
 
 void SDLRenderer::init() {
+	std::cout << "OK\n";
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
 		printf("error initializing SDL: %s\n", SDL_GetError());
 	
@@ -20,116 +20,79 @@ void SDLRenderer::init() {
             "GAME", // creates a window
             SDL_WINDOWPOS_CENTERED,
             SDL_WINDOWPOS_CENTERED,
-            1000,
-            1000,
+            (PIXEL_SIZE + PIXEL_MARGIN) * MATRIX_WIDTH,
+            (PIXEL_SIZE + PIXEL_MARGIN) * MATRIX_HEIGHT,
             0);
  
-	// triggers the program that controls
-	// your graphics hardware and sets flags
-	Uint32 render_flags = SDL_RENDERER_ACCELERATED;
- 
 	// creates a renderer to render our images
-	SDL_Renderer* rend = SDL_CreateRenderer(m_win, -1, render_flags);
- 
-	// let us control our image position
-	// so that we can move it with our keyboard.
-	SDL_Rect dest;
- 
-	// adjust height and width of our image box.
-	dest.w = 20;
-	dest.h = 20;
- 
-	// sets initial x-position of object
-	dest.x = (1000 - dest.w) / 2;
- 
-	// sets initial y-position of object
-	dest.y = (1000 - dest.h) / 2;
- 
-	// controls animation loop
-	int close = 0;
- 
-	// speed of box
-	int speed = 300;
- 
-	// animation loop
-	while (!close) {
-		SDL_Event event;
- 
-		// Events management
-		while (SDL_PollEvent(&event)) {
-			switch (event.type) {
- 
-			case SDL_QUIT:
-				// handling of close button
-				close = 1;
-				break;
- 
-			case SDL_KEYDOWN:
-				// keyboard API for key pressed
-				switch (event.key.keysym.scancode) {
-				case SDL_SCANCODE_W:
-				case SDL_SCANCODE_UP:
-					dest.y -= speed / 30;
-					break;
-				case SDL_SCANCODE_A:
-				case SDL_SCANCODE_LEFT:
-					dest.x -= speed / 30;
-					break;
-				case SDL_SCANCODE_S:
-				case SDL_SCANCODE_DOWN:
-					dest.y += speed / 30;
-					break;
-				case SDL_SCANCODE_D:
-				case SDL_SCANCODE_RIGHT:
-					dest.x += speed / 30;
-					break;
-				default:
-					break;
-				}
-			}
+	m_rend = SDL_CreateRenderer(m_win, -1, SDL_RENDERER_ACCELERATED);
+
+	for (int x = 0; x < MATRIX_WIDTH; x++) {
+		for (int y = 0; y < MATRIX_HEIGHT; y++) {
+			m_pixels[x][y].x = x * (PIXEL_SIZE + PIXEL_MARGIN);
+			m_pixels[x][y].y = y * (PIXEL_SIZE + PIXEL_MARGIN);
+			m_pixels[x][y].w = PIXEL_SIZE;
+			m_pixels[x][y].h = PIXEL_SIZE;
 		}
- 
-		// right boundary
-		if (dest.x + dest.w > 1000)
-			dest.x = 1000 - dest.w;
- 
-		// left boundary
-		if (dest.x < 0)
-			dest.x = 0;
- 
-		// bottom boundary
-		if (dest.y + dest.h > 1000)
-			dest.y = 1000 - dest.h;
- 
-		// upper boundary
-		if (dest.y < 0)
-			dest.y = 0;
- 
-		// clears the screen
-		SDL_RenderClear(rend);
-		
-		SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
-		SDL_RenderDrawRect(rend, &dest);
-		SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
- 
-		// triggers the double buffers
-		// for multiple rendering
-		SDL_RenderPresent(rend);
- 
-		// calculates to 60 fps
-		SDL_Delay(1000 / 60);
 	}
- 
-	// destroy renderer
-	SDL_DestroyRenderer(rend);
- 
-	// destroy window
+}
+
+void SDLRenderer::draw(RendererPixel pixels[MATRIX_WIDTH][MATRIX_HEIGHT]) {
+	SDL_RenderClear(m_rend);
+
+	for (int x = 0; x < MATRIX_WIDTH; x++) {
+		for (int y = 0; y < MATRIX_HEIGHT; y++) {
+			SDL_SetRenderDrawColor(m_rend, pixels[x][y].red, pixels[x][y].green, pixels[x][y].blue, 255);
+			// SDL_RenderFillRect(m_rend, &m_pixels[x][y]);
+			SDL_RenderFillCircle(m_rend, m_pixels[x][y].x + PIXEL_SIZE / 2, m_pixels[x][y].y + PIXEL_SIZE / 2, PIXEL_SIZE / 2);
+		}
+	}
+
+	SDL_SetRenderDrawColor(m_rend, 0, 0, 0, 255);
+	SDL_RenderPresent(m_rend);
+
+	// calculates to 60 fps
+	SDL_Delay(1000 / 60);
+}
+
+void SDLRenderer::quit() {
+	SDL_DestroyRenderer(m_rend);
 	SDL_DestroyWindow(m_win);
-	 
-	// close SDL
 	SDL_Quit();
 }
 
-void SDLRenderer::draw(RendererPixel **pixels)
-{
+int SDLRenderer::SDL_RenderFillCircle(SDL_Renderer *renderer, int x, int y, int radius) {
+    int offsetx, offsety, d;
+    int status;
+
+    offsetx = 0;
+    offsety = radius;
+    d = radius -1;
+    status = 0;
+
+    while (offsety >= offsetx) {
+        status += SDL_RenderDrawLine(renderer, x - offsety, y + offsetx, x + offsety, y + offsetx);
+        status += SDL_RenderDrawLine(renderer, x - offsetx, y + offsety, x + offsetx, y + offsety);
+        status += SDL_RenderDrawLine(renderer, x - offsetx, y - offsety, x + offsetx, y - offsety);
+        status += SDL_RenderDrawLine(renderer, x - offsety, y - offsetx, x + offsety, y - offsetx);
+
+        if (status < 0) {
+            status = -1;
+            break;
+        }
+
+        if (d >= 2*offsetx) {
+            d -= 2*offsetx + 1;
+            offsetx +=1;
+        } else if (d < 2 * (radius - offsety)) {
+            d += 2 * offsety - 1;
+            offsety -= 1;
+        } else {
+            d += 2 * (offsety - offsetx - 1);
+            offsety -= 1;
+            offsetx += 1;
+        }
+    }
+
+    return status;
 }

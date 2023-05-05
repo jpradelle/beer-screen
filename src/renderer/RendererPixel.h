@@ -9,6 +9,7 @@ public:
     RendererPixel();
     RendererPixel(unsigned char red, unsigned char green, unsigned char blue);
     ~RendererPixel();
+    void rgb(unsigned char red, unsigned char green, unsigned char blue);
     unsigned char red;
     unsigned char green;
     unsigned char blue;
