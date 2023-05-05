@@ -1,6 +1,5 @@
 include ./config/ubuntu.mk
 
-#install: sudo apt-get install libsdl1.2-dev libsdl-gfx1.2-dev
 #install: sudo apt install libsdl2-dev
 
 SOURCE_FOLDERS = src 
