@@ -3,7 +3,7 @@
 #include <SDL2/SDL_timer.h>
 #include <iostream>
 
-SDLRenderer::SDLRenderer() {
+SDLRenderer::SDLRenderer() : m_lastRender(0) {
 
 }
 
@@ -52,8 +52,24 @@ int SDLRenderer::draw(RendererPixel pixels[MATRIX_WIDTH][MATRIX_HEIGHT]) {
 	SDL_RenderPresent(m_rend);
 
 	// calculates to 30 fps
-	SDL_Delay(1000 / 30); // TODO
-    return 1000 / 30;
+    if (m_lastRender == 0) {
+	    SDL_Delay(1000 / 30);
+        m_lastRender = SDL_GetTicks();
+    } else {
+        int delay = (int) ((Uint32) (1000 / 30) - (SDL_GetTicks() - m_lastRender));
+        std::cout << "sleep(" << delay << ")" << std::endl;
+        if (delay > 0)
+	        SDL_Delay(delay);
+
+        Uint32 time = SDL_GetTicks();
+        Uint32 elapsedTime = time - m_lastRender;
+        m_lastRender = time;
+        std::cout << "sleep(" << delay << ", " << elapsedTime << ")" << std::endl;
+
+        return (int) elapsedTime;
+    }
+
+    return 1;
 }
 
 void SDLRenderer::quit() {

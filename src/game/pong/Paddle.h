@@ -17,6 +17,9 @@ public:
     ~Paddle();
     void move(IController* controller);
     void draw(RendererPixel matrix[MATRIX_WIDTH][MATRIX_HEIGHT]);
+    int getX() const;
+    int getY() const;
+    int getHeight() const;
 
 private:
     int m_x, m_y;

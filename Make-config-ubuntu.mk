@@ -16,4 +16,4 @@ LDFLAGS = -std=c++11 -lSDL2 # -l SDL -l SDL_gfx
 
 CDEFINE = -DSIMULATION
 
-START_CMD =  $(shell $(SH) -c "./$(BUILDDIRECTORY)/$(PROJECT).elf")
+START_CMD = $(shell $(SH) -c "./$(BUILDDIRECTORY)/$(PROJECT).elf")

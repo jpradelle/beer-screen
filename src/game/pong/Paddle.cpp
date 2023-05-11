@@ -25,3 +25,15 @@ void Paddle::draw(RendererPixel matrix[MATRIX_WIDTH][MATRIX_HEIGHT]) {
         matrix[m_x][y].rgb(255, 255, 255);
     }
 }
+
+int Paddle::getX() const {
+    return m_x;
+}
+
+int Paddle::getY() const {
+    return m_y;
+}
+
+int Paddle::getHeight() const {
+    return PADDLE_HEIGHT;
+}
