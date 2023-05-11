@@ -30,6 +30,20 @@ void SDLController::update() {
     m_button1 = false;
     m_button2 = false;
 
+    const Uint8 * state = SDL_GetKeyboardState(NULL);
+    if (state[m_mapUp]) // SDL_SCANCODE_RIGHT
+        m_up = true;
+    if (state[m_mapDown])
+        m_down = true;
+    if (state[m_mapLeft])
+        m_left = true;
+    if (state[m_mapRight])
+        m_right = true;
+    if (state[m_mapButton1])
+        m_button1 = true;
+    if (state[m_mapButton2])
+        m_button2 = true;
+
     // Events management
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -39,21 +53,21 @@ void SDLController::update() {
             m_quit = true;
             break;
 
-        case SDL_KEYDOWN:
-            SDL_Scancode code = event.key.keysym.scancode;
-            if (code == m_mapUp) {
-                m_up = true;
-            } else if (code == m_mapDown) {
-                m_down = true;
-            } else if (code == m_mapLeft) {
-                m_left = true;
-            } else if (code == m_mapRight) {
-                m_right = true;
-            } else if (code == m_mapButton1) {
-                m_button1 = true;
-            } else if (code == m_mapButton2) {
-                m_button2 = true;
-            }
+        // case SDL_KEYDOWN:
+        //     SDL_Scancode code = event.key.keysym.scancode;
+        //     if (code == m_mapUp) {
+        //         m_up = true;
+        //     } else if (code == m_mapDown) {
+        //         m_down = true;
+        //     } else if (code == m_mapLeft) {
+        //         m_left = true;
+        //     } else if (code == m_mapRight) {
+        //         m_right = true;
+        //     } else if (code == m_mapButton1) {
+        //         m_button1 = true;
+        //     } else if (code == m_mapButton2) {
+        //         m_button2 = true;
+        //     }
         }
     }
 }
