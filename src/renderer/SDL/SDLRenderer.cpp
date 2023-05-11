@@ -37,7 +37,7 @@ void SDLRenderer::init() {
 	}
 }
 
-void SDLRenderer::draw(RendererPixel pixels[MATRIX_WIDTH][MATRIX_HEIGHT]) {
+int SDLRenderer::draw(RendererPixel pixels[MATRIX_WIDTH][MATRIX_HEIGHT]) {
 	SDL_RenderClear(m_rend);
 
 	for (int x = 0; x < MATRIX_WIDTH; x++) {
@@ -51,8 +51,9 @@ void SDLRenderer::draw(RendererPixel pixels[MATRIX_WIDTH][MATRIX_HEIGHT]) {
 	SDL_SetRenderDrawColor(m_rend, 0, 0, 0, 255);
 	SDL_RenderPresent(m_rend);
 
-	// calculates to 60 fps
-	SDL_Delay(1000 / 60);
+	// calculates to 30 fps
+	SDL_Delay(1000 / 30); // TODO
+    return 1000 / 30;
 }
 
 void SDLRenderer::quit() {

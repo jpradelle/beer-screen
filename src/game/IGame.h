@@ -12,7 +12,7 @@ class IGame
 public:
     IGame();
     ~IGame();
-    virtual void nextFrame(RendererPixel[MATRIX_WIDTH][MATRIX_HEIGHT], IController* controller1, IController* controller2) = 0;
+    virtual void nextFrame(RendererPixel matrix[MATRIX_WIDTH][MATRIX_HEIGHT], IController* controller1, IController* controller2, int deltaTime) = 0;
 
 private:
 

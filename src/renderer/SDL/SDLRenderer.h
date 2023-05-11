@@ -17,7 +17,7 @@ public:
     ~SDLRenderer();
 
     void init();
-    void draw(RendererPixel pixels[MATRIX_WIDTH][MATRIX_HEIGHT]);
+    int draw(RendererPixel pixels[MATRIX_WIDTH][MATRIX_HEIGHT]);
     void quit();
 
 private:

@@ -21,13 +21,14 @@ int main() {
 
 	RendererPixel matrix[MATRIX_WIDTH][MATRIX_HEIGHT];
 
+	int deltaTime = 0;
 	while (!player1Controller->isQuit() && !player2Controller->isQuit()) {
 		player1Controller->update();
 		player2Controller->update();
 
-		game->nextFrame(matrix, player1Controller, player2Controller);
+		game->nextFrame(matrix, player1Controller, player2Controller, deltaTime);
 
-		renderer->draw(matrix);
+		deltaTime = renderer->draw(matrix);
 	}
 
 	renderer->quit();

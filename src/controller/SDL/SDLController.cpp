@@ -53,21 +53,21 @@ void SDLController::update() {
             m_quit = true;
             break;
 
-        // case SDL_KEYDOWN:
-        //     SDL_Scancode code = event.key.keysym.scancode;
-        //     if (code == m_mapUp) {
-        //         m_up = true;
-        //     } else if (code == m_mapDown) {
-        //         m_down = true;
-        //     } else if (code == m_mapLeft) {
-        //         m_left = true;
-        //     } else if (code == m_mapRight) {
-        //         m_right = true;
-        //     } else if (code == m_mapButton1) {
-        //         m_button1 = true;
-        //     } else if (code == m_mapButton2) {
-        //         m_button2 = true;
-        //     }
+        case SDL_KEYDOWN:
+            SDL_Scancode code = event.key.keysym.scancode;
+            if (code == m_mapUp) {
+                m_up = true;
+            } else if (code == m_mapDown) {
+                m_down = true;
+            } else if (code == m_mapLeft) {
+                m_left = true;
+            } else if (code == m_mapRight) {
+                m_right = true;
+            } else if (code == m_mapButton1) {
+                m_button1 = true;
+            } else if (code == m_mapButton2) {
+                m_button2 = true;
+            }
         }
     }
 }

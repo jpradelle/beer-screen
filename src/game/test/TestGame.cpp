@@ -8,7 +8,7 @@ TestGame::~TestGame() {
 
 }
 
-void TestGame::nextFrame(RendererPixel matrix[MATRIX_WIDTH][MATRIX_HEIGHT], IController *controller1, IController *controller2) {
+void TestGame::nextFrame(RendererPixel matrix[MATRIX_WIDTH][MATRIX_HEIGHT], IController *controller1, IController *controller2, int deltaTime) {
     // Reset matrix
     for (int x = 0; x < MATRIX_WIDTH; x++) {
         for (int y = 0; y < MATRIX_HEIGHT; y++) {
