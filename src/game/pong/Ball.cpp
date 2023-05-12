@@ -3,7 +3,7 @@
 #include "PongGame.h"
 #include <iostream>
 
-Ball::Ball() : m_x(MATRIX_WIDTH / 2), m_y(MATRIX_HEIGHT / 2), m_speed(40), m_angle(M_PI / 4) {
+Ball::Ball() : m_x(MATRIX_WIDTH / 2), m_y(MATRIX_HEIGHT / 2), m_speed(40), m_angle(M_PI / 8) {
 
 }
 
@@ -15,24 +15,20 @@ void Ball::move(Paddle *paddleLeft, Paddle *paddleRight, PongGame* game, int del
     float dx = m_speed * deltaTime / 1000.0 * cos(m_angle);
     float dy = m_speed * deltaTime / 1000.0 * sin(m_angle);
 
-    if (m_x + dx <= paddleLeft->getX() + 1) {
-        if (m_y >= paddleLeft->getY() - 0.5 && m_y <= paddleLeft->getY() + paddleRight->getHeight() + 0.5) {
-            // Collide width paddle
-            m_angle += M_PI / 2;
-            m_x = paddleLeft->getX() + 1;
-        } else {
-            // Out
-            game->scoreRight();
-        }
-    } else if (m_x + dx >= paddleRight->getX() - 1) {
-        if (m_y >= paddleRight->getY() - 0.5 && m_y <= paddleRight->getY() + paddleRight->getHeight() + 0.5) {
-            // Collide width paddle
-            m_angle += M_PI / 2;
-            m_x = paddleRight->getX() - 1;
-        } else {
-            // Out
-            game->scoreLeft();
-        }
+    if (m_x + dx <= paddleLeft->getX() + 1 && m_y >= paddleLeft->getY() - 0.5 && m_y <= paddleLeft->getY() + paddleRight->getHeight() + 0.5) {
+        // Collide width paddle
+        m_angle = M_PI - m_angle;
+        m_x = paddleLeft->getX() + 1;
+    } else if (m_x + dx <= 0) {
+        // Out
+        game->scoreRight();
+    } else if (m_x + dx >= paddleRight->getX() - 1 && m_y >= paddleRight->getY() - 0.5 && m_y <= paddleRight->getY() + paddleRight->getHeight() + 0.5) {
+        // Collide width paddle
+        m_angle = M_PI - m_angle;
+        m_x = paddleRight->getX() - 1;
+    } else if (m_x + dx >= MATRIX_WIDTH - 1) {
+        // Out
+        game->scoreLeft();
     } else {
         m_x += dx;
     }
