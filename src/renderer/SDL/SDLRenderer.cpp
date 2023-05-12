@@ -57,14 +57,14 @@ int SDLRenderer::draw(RendererPixel pixels[MATRIX_WIDTH][MATRIX_HEIGHT]) {
         m_lastRender = SDL_GetTicks();
     } else {
         int delay = (int) ((Uint32) (1000 / 30) - (SDL_GetTicks() - m_lastRender));
-        std::cout << "sleep(" << delay << ")" << std::endl;
+        // std::cout << "sleep(" << delay << ")" << std::endl;
         if (delay > 0)
 	        SDL_Delay(delay);
 
         Uint32 time = SDL_GetTicks();
         Uint32 elapsedTime = time - m_lastRender;
         m_lastRender = time;
-        std::cout << "sleep(" << delay << ", " << elapsedTime << ")" << std::endl;
+        // std::cout << "sleep(" << delay << ", " << elapsedTime << ")" << std::endl;
 
         return (int) elapsedTime;
     }
